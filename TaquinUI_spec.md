@@ -1,17 +1,16 @@
 # TaquinUI SPEC
 
-Specification de la classe TaquinUI
 
-TaquinUI extends JFrame implements KeyListener{
+### TaquinUI extends JFrame implements KeyListener{
 
 ### Champs de classe
 
-* Case[][] cases; //matrix des cases
-* int size; //taille du taquin taquin, nombre de cases = size*size
-* int rowZero; //numéro de la ligne du zéro 
-* int colZero; //numéro de la colonne du zéro	
-* int numTrue; //nombre de cases qui sont à leurs bonnes places
-* JPanel mainPanel =  new JPanel(); //panel principal dans lequel tout est affiché
+* Case[][] cases : matrix des cases
+* int size : taille du taquin taquin, nombre de cases = size*size
+* int rowZero : numéro de la ligne du zéro 
+* int colZero : numéro de la colonne du zéro	
+* int numTrue : nombre de cases qui sont à leurs bonnes places
+* JPanel mainPanel =  new JPanel() : panel principal dans lequel tout est affiché
 
 ### Method
 

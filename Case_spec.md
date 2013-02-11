@@ -1,14 +1,13 @@
 # Case SPEC
 
-Specification de la classe Case
 
-Case extends JPanel
+### Case extends JPanel
 
 ### Champs de classe
 
-* int value; valeur de la case (0, 1, ..., size-1) 
+* int value : valeur de la case (0, 1, ..., size-1) 
 
-* ImageIcon image; image de la case
+* ImageIcon image : image de la case
 	
 
 	
