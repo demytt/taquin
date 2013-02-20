@@ -1,0 +1,14 @@
+package test;
+
+import ui.TaquinUI;
+import graphe_taquin.GraphConf;
+import graphe_taquin.Taquin;
+
+public class Test {
+
+	
+	public static void main(String[] args) {
+		new TaquinUI(3);
+	}
+	
+}

@@ -1,0 +1,96 @@
+package graphe_taquin;
+
+import graphe_cycles.Arbre;
+import graphe_cycles.GraphCycles;
+
+import java.util.PriorityQueue;
+
+public class GraphConf {
+
+	static Taquin default_fin = new Taquin("0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15");
+	
+	Taquin config_ini;
+	Taquin config_fin;
+	boolean solution;
+	public String cheminSolution;
+
+	public GraphConf(Taquin _config_ini, Taquin _config_fin) {
+		config_ini = _config_ini;
+		config_fin = _config_fin;
+		solution = false;
+	}
+
+	public GraphConf(Taquin _config_ini) {
+		config_ini = _config_ini;
+		String S = "";
+		for (int i=0; i<(config_ini.size*config_ini.size); i++) S+=Integer.toString(i)+" ";
+		config_fin = new Taquin(S);
+		solution = false;
+	}
+	
+	public void IDA() {
+		int [][] T = config_fin.positions();
+		GraphCycles g = new GraphCycles("cycles.txt");
+		config_ini.conflit(T);
+		config_ini.dheur=config_ini.distance(config_fin) + config_ini.conflit;
+		if (config_ini.equals(config_fin)) {
+			solution = true;
+		}
+		int limite = config_ini.dheur;
+		while (!solution) {
+			limite = DFS(limite, T, g);
+		}
+		System.out.println(limite);
+	}
+
+	public int DFS(int limite, int[][] T, GraphCycles g) {
+		int l = limite;
+		PriorityQueue<Taquin> P = new PriorityQueue<Taquin>(1, new TaquinComparator());
+		P.add(config_ini);
+		while (!P.isEmpty()) {
+			Taquin T1 = P.poll();
+			if (config_fin.equals(T1)) {
+				solution = true;
+				cheminSolution = T1.chemin;
+				return limite;
+			}
+			for (Arete A : T1.aretes()) {
+				Taquin T2 = A.destination;
+				T2.dist = T1.dist + 1;
+				T2.conflit(T);
+				int k1 = T1.trou[0];
+				int k2 = T1.trou[1];
+				int[] pos = T[T2.config[k1][k2]];
+				int j1 = T2.trou[0];
+				int j2 = T2.trou[1];
+				if ((Math.abs(pos[0] - k1) + Math.abs(pos[1] - k2)) > (Math.abs(pos[0] - j1) + Math.abs(pos[1] - j2))) {
+					T2.dheur = T1.dheur + 1 + T2.conflit - T1.conflit;
+				} else {
+					T2.dheur = T1.dheur - 1 + T2.conflit - T1.conflit;
+				}
+
+				if ((T2.dist + T2.dheur) <= l) {
+					if (!cycle(T2.chemin, g))
+						P.add(T2);
+				}
+			}
+		}
+		return limite+1;
+	}
+
+	// détecte les cycles
+	public boolean cycle(String s, GraphCycles g) {
+		char[] tab = s.substring(Math.max(s.length()-13, 0)).toCharArray();
+		Arbre a = g.root;
+		int lg = tab.length;
+		for(int i = lg-1; i>=0; i--){
+			a=a.fils(tab[i]);
+			if(a==null)
+				return false;
+			if(a.estUneFeuille())
+				return true;
+		}
+		return false;
+	}
+
+}

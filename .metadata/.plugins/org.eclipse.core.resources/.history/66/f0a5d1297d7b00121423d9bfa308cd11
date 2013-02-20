@@ -1,0 +1,24 @@
+package test;
+
+import ui.TaquinUI;
+import graphe_taquin.GraphConf;
+import graphe_taquin.Taquin;
+
+public class Test {
+
+	static Taquin config_fin = new Taquin("0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15");
+	
+	public static void main(String[] args) {
+//		Taquin T = new Taquin("0 1 2 3 4 5 6 7 8 9 10 11 12 15 13 14");
+//		if (!T.soluble()) {
+//			System.out.println("Taquin non soluble");
+//			return;
+//		}
+//		System.out.print("OK ");
+//		GraphConf g = new GraphConf(T, config_fin);
+//		g.IDA();
+//		T.afficherChemin(g.cheminSolution);
+		new TaquinUI(3);
+	}
+	
+}
