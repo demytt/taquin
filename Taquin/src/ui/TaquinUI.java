@@ -30,6 +30,7 @@ public class TaquinUI extends JFrame implements KeyListener{
 		createNew();
 
 		setContentPane(mainPanel);
+		setJMenuBar(new MenuTaquin(this));
 		setPreferredSize(new Dimension(400, 400));
 		pack(); //compute and draw everything
 		setVisible(true);	
