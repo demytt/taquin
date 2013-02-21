@@ -1,0 +1,152 @@
+package ui;
+
+import java.awt.Choice;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.reflect.Field;
+
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
+
+@SuppressWarnings("serial")
+public class MenuTaquin extends JMenuBar implements ActionListener{
+
+    static GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    static Font[] fonts = e.getAllFonts();  
+    
+    static JList<String> fontList = new JList<String>();
+    static DefaultListModel<String> currentFontList = new DefaultListModel<String>();
+    static JScrollPane scrollFont = new JScrollPane(fontList);
+	
+    static JList<Color> colorList = new JList<Color>();
+    static DefaultListModel<Color> currentColorList = new DefaultListModel<Color>();
+    static JScrollPane scrollColor = new JScrollPane(colorList);
+	
+    
+	JMenu menu; //The hierarchy: is JMenuBar contains JMenu contains JMenuItem
+	TaquinUI taquinUI; //taquinUI in which the MenuTaquin is displayed
+	
+	//Constructeur du menu 
+	public MenuTaquin(TaquinUI _taquinUI) {
+
+	    for (Font f : fonts) currentFontList.addElement(f.getName());
+	    fontList.setModel(currentFontList);
+	    fontList.setVisibleRowCount(11);
+	    
+	    Field[] fields = java.awt.Color.class.getDeclaredFields();
+	    for (Field f : fields) {
+	    	try {
+	    		if (! java.lang.reflect.Modifier.isPublic(f.getModifiers())) break;
+	    		if (! java.lang.reflect.Modifier.isStatic(f.getModifiers())) break;
+	    		if (! java.lang.reflect.Modifier.isFinal(f.getModifiers())) break;
+	    		Object o = f.get(null);
+	    		if (o instanceof java.awt.Color) { 
+	    			String name = f.getName();
+	    			if (name == name.toLowerCase()) currentColorList.addElement((Color) o);
+	    		}
+	    	} 
+	    	catch (Exception e) {e.printStackTrace();}  
+	    } 
+	    colorList.setFixedCellWidth(50);
+	    colorList.setModel(currentColorList);
+	    colorList.setVisibleRowCount(11);
+	    
+	    ListCellRenderer<Color> renderer = new ColorListRenderer();
+	    colorList.setCellRenderer(renderer);
+	    
+	    
+		taquinUI = _taquinUI;
+		menu = new JMenu("Options");
+		
+		JMenuItem createNew = new JMenuItem("Nouveau taquin");
+		createNew.addActionListener(this);
+		createNew.setActionCommand("createNew");
+		menu.add(createNew);
+		
+		JMenuItem setSize = new JMenuItem("Choix de la taille du taquin");
+		setSize.addActionListener(this);
+		setSize.setActionCommand("setSize");
+		menu.add(setSize);
+		
+		JMenuItem setFont = new JMenuItem("Choix de la police");
+		setFont.addActionListener(this);
+		setFont.setActionCommand("setFont");
+		menu.add(setFont);
+		
+		add(menu);
+	}
+
+	//Define what to do when something is clicked in the menu
+	public void actionPerformed(ActionEvent actionEvent) {
+		String S = actionEvent.getActionCommand();
+		if (S=="createNew") taquinUI.createNew();
+		else if (S=="setSize")  setSize(0);
+		else if (S=="setFont") setFont();
+	}
+	
+	//Set the size of the taquin, numTimes indicates how many times the user inputs a wrong data format
+	private void setSize(int numTimes) {
+		try {
+			double size = Double.valueOf(JOptionPane.showInputDialog(this, "Choix de la taille:"));
+			if ( (size == Math.ceil(size)) && (size >= 1)) taquinUI.setSize((int) size);
+			else throw new Exception();
+		}
+		
+		catch(Exception e) {
+			String S;
+			if (numTimes==0) S = "Premier avertissement : format de données non valides. " +
+					"\nVeuillez entrer un entier supérieur ou égal à 1";
+			else if (numTimes==1) S = "Veuillez respecter les instructions données";
+			else if (numTimes==2) S = "Ceci est le dernier avertissement, "
+					+"veuillez vous conformer aux instructions";
+			else {
+				S = "Tant pis pour vous, au revoir !";
+				JOptionPane.showMessageDialog(this, S);
+				System.exit(0);
+			}
+			JOptionPane.showMessageDialog(this, S);
+			setSize(numTimes+1);
+		}
+		
+	}
+	
+	private void setFont() {    
+	    final JFrame choiceFrame = new JFrame("Choix de la police");
+	    
+	    BoxLayout layout = new BoxLayout( choiceFrame.getContentPane(), BoxLayout.X_AXIS);
+	    choiceFrame.getContentPane().setLayout(layout);
+	    
+	    choiceFrame.add(scrollFont);
+	    choiceFrame.add(scrollColor);
+	    
+	    JButton ok = new JButton("OK");
+	    choiceFrame.add(ok);
+	    ok.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	    		taquinUI.setFontName(fontList.getSelectedValue(), colorList.getSelectedValue());
+	    		choiceFrame.dispose();
+	        }
+	    });
+
+	    //choiceFrame.setPreferredSize(new Dimension(300, 100));
+	    choiceFrame.setLocation(getWidth()/2, getHeight()/2);
+	    choiceFrame.pack();
+	    choiceFrame.setVisible(true);
+	    choiceFrame.setAlwaysOnTop(true);
+	}
+	
+	
+}
