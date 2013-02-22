@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.File;
 import java.util.LinkedList;
 
 
@@ -13,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class TaquinUI extends JFrame implements KeyListener{
+public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 
 	Case[][] cases; //matrix of cases
 	int size; //size of the taquin, number of cases = size*size
@@ -192,4 +195,20 @@ public class TaquinUI extends JFrame implements KeyListener{
 			}
 		}
 	}
+
+	public void windowActivated(WindowEvent e) {  }
+
+	public void windowClosed(WindowEvent e) {  }
+
+	public void windowClosing(WindowEvent e) {	
+
+	}
+
+	public void windowDeactivated(WindowEvent e) {	}
+
+	public void windowDeiconified(WindowEvent e) {	}
+
+	public void windowIconified(WindowEvent e) {  }
+
+	public void windowOpened(WindowEvent e) {	}
 }
