@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename compilation unit &apos;ai.taquin.java&apos; to &apos;Taquin.java&apos;&#x0D;&#x0A;- Original project: &apos;Taquin&apos;&#x0D;&#x0A;- Original element: &apos;ai.taquin.java&apos;&#x0D;&#x0A;- Renamed element: &apos;ai.Taquin.java&apos;" description="Rename compilation unit &apos;taquin.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src&lt;ai{taquin.java" name="Taquin.java" references="false" stamp="1361543231737" version="1.0"/>
-</session>
