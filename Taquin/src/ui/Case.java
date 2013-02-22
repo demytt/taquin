@@ -80,7 +80,6 @@ public class Case extends JPanel{
 
 	public void updateImage(String directory2) {
 		directory = directory2;
-		System.out.println(directory2);
 		if (value==0) image = new ImageIcon(); //"void" image = no image
 		else image = new ImageIcon(directory+Integer.toString(value)+".png");
 		

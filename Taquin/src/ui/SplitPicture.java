@@ -10,7 +10,7 @@ public class SplitPicture {
 	public static String splitImage(int size) {
 		File fileImage = selectImage();
 
-		String fileBase = "C:/Users/demytt/Desktop/temp/img";
+		String fileBase = "img";
 		try{			
 			BufferedImage img = ImageIO.read(fileImage);
 			int height = img.getHeight();
