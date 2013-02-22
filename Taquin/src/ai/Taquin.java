@@ -1,11 +1,5 @@
 package ai;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.StringTokenizer;
-
 public class Taquin {
 
 	public int[][] config;
