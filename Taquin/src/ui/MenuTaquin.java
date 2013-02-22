@@ -84,6 +84,11 @@ public class MenuTaquin extends JMenuBar implements ActionListener{
 		setFont.setActionCommand("setFont");
 		menu.add(setFont);
 		
+		JMenuItem setImage= new JMenuItem("Choix de l'image");
+		setImage.addActionListener(this);
+		setImage.setActionCommand("setImage");
+		menu.add(setImage);
+		
 		add(menu);
 	}
 
@@ -93,6 +98,7 @@ public class MenuTaquin extends JMenuBar implements ActionListener{
 		if (S=="createNew") taquinUI.createNew();
 		else if (S=="setSize")  setSize(0);
 		else if (S=="setFont") setFont();
+		else if (S=="setImage") setImage();
 	}
 	
 	//Set the size of the taquin, numTimes indicates how many times the user inputs a wrong data format
@@ -146,5 +152,8 @@ public class MenuTaquin extends JMenuBar implements ActionListener{
 	    choiceFrame.setAlwaysOnTop(true);
 	}
 	
+	private void setImage(){
+		taquinUI.setImage(SplitPicture.splitImage(taquinUI.size));
+	}	
 	
 }

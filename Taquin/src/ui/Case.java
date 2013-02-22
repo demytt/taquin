@@ -40,7 +40,7 @@ public class Case extends JPanel{
 		value = _value;
 		if (isImage) {
 			if (value==0) image = new ImageIcon(); //"void" image = no image
-			else image = new ImageIcon(directory+"/"+Integer.toString(value)+".jpg");
+			else image = new ImageIcon(directory+Integer.toString(value)+".png");
 		}
 		updateUI(); //tell the UI to re draw the cell
 	}
@@ -76,6 +76,16 @@ public class Case extends JPanel{
 		g.drawLine(0,0,0,h);
 		g.drawLine(0,0,w,0);
 		
+	}
+
+	public void updateImage(String directory2) {
+		directory = directory2;
+		System.out.println(directory2);
+		if (value==0) image = new ImageIcon(); //"void" image = no image
+		else image = new ImageIcon(directory+Integer.toString(value)+".png");
+		
+		isImage = true;
+		updateUI();
 	}
 	
 }

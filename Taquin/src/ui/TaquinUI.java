@@ -185,5 +185,11 @@ public class TaquinUI extends JFrame implements KeyListener{
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}
 	
-	
+	void setImage(String directory){
+		for(int i = 0; i<size; i++){
+			for(int j = 0; j<size; j++){
+				cases[i][j].updateImage(directory);
+			}
+		}
+	}
 }
