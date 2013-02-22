@@ -1,23 +1,15 @@
 package ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Menu;
-import java.awt.MenuBar;
-import java.awt.PopupMenu;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.LinkedList;
 
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -30,7 +22,8 @@ public class TaquinUI extends JFrame implements KeyListener{
 	
 	int numTrue; //number of cells that are in their good positions (to win)
 	
-	String fontName = "SERIF";
+	static String defaultFontName = "SERIF";
+	static Color defaultFontColor = Color.black;
 	
 	JPanel mainPanel =  new JPanel(); //mainPanel in which everything is displayed
 
@@ -44,7 +37,7 @@ public class TaquinUI extends JFrame implements KeyListener{
 		setPreferredSize(new Dimension(400, 400));
 		pack(); //compute and draw everything
 		setVisible(true);	
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //sinon la JFrame ne s'arrête quand elle est fermée
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //sinon la JFrame ne s'arrête pas quand elle est fermée
 		addKeyListener(this); 
 	}
 	
@@ -58,7 +51,7 @@ public class TaquinUI extends JFrame implements KeyListener{
 		for (int i=0; i<size; i++) {
 			for (int j=0; j<size; j++) {
 				int number = bij.poll();
-				cases[i][j] = new Case(number, fontName);
+				cases[i][j] = new Case(number, defaultFontName, defaultFontColor);
 				if (number == 0) {
 					rowZero=i;
 					colZero=j;
@@ -105,11 +98,10 @@ public class TaquinUI extends JFrame implements KeyListener{
 		createNew();
 	}
 	
-	public void setFontName(String _fontName) {
-		fontName = _fontName;	
+	public void setFontName(String fontName, Color fontColor) {
 		for (int i=0; i<size; i++) {
 			for (int j=0; j<size; j++) {
-				cases[i][j].updateFont(fontName);
+				cases[i][j].updateFont(fontName, fontColor);
 			}
 		}
 	}
@@ -193,5 +185,11 @@ public class TaquinUI extends JFrame implements KeyListener{
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}
 	
-	
+	void setImage(String directory){
+		for(int i = 0; i<size; i++){
+			for(int j = 0; j<size; j++){
+				cases[i][j].updateImage(directory);
+			}
+		}
+	}
 }

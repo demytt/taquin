@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -16,9 +15,10 @@ public class Case extends JPanel{
 	String directory;
 	
 	String fontName;
+	Color fontColor;
 	
 	//constructeur si un chemin pour les images est donné
-	public Case(int _value, String _directory, boolean t) {
+	public Case(int _value, String _directory) {
 		value = _value;
 		directory = _directory;
 		image = new ImageIcon(directory+"/"+Integer.toString(value)+".jpg");
@@ -27,10 +27,11 @@ public class Case extends JPanel{
 	}
 	
 	//constructeur avec des images par défaut et un choix de police
-	public Case(int _value, String _fontName) {
+	public Case(int _value, String _fontName, Color _fontColor) {
 		value = _value;		
 		isImage = false;			
 		fontName = _fontName; 
+		fontColor = _fontColor;
 		setBackground(Color.WHITE);
 	}
 		
@@ -39,13 +40,14 @@ public class Case extends JPanel{
 		value = _value;
 		if (isImage) {
 			if (value==0) image = new ImageIcon(); //"void" image = no image
-			else image = new ImageIcon(directory+"/"+Integer.toString(value)+".jpg");
+			else image = new ImageIcon(directory+Integer.toString(value)+".png");
 		}
 		updateUI(); //tell the UI to re draw the cell
 	}
 
-	public void updateFont(String _fontName) {
+	public void updateFont(String _fontName, Color _fontColor) {
 		fontName = _fontName;
+		fontColor = _fontColor;
 		updateUI();
 	}
 	
@@ -59,15 +61,31 @@ public class Case extends JPanel{
 		
 		else {
 			int sizeFont = (int) (0.5*Math.min(w, h));
+			
+			Color old = g.getColor();
+			g.setColor(fontColor);
 			g.setFont(new Font(fontName, Font.BOLD, sizeFont));
-			if (value!=0) g.drawString(Integer.toString(value), 
-					Math.max(sizeFont,w/2), Math.max(sizeFont,2*h/3));
+			if ((value>0)&&(value<10)) g.drawString(Integer.toString(value), 
+					Math.min(sizeFont,w/3), Math.max(sizeFont,2*h/3));
+			else if (value>=10) g.drawString(Integer.toString(value), 
+					Math.min(sizeFont,w/4), Math.max(sizeFont,2*h/3));
+			g.setColor(old);
 		}
 		
 		//TO BE CHANGED -> draw the lines in the TaquinUI (less lines), or include the lines in the image?
 		g.drawLine(0,0,0,h);
 		g.drawLine(0,0,w,0);
 		
+	}
+
+	public void updateImage(String directory2) {
+		directory = directory2;
+		System.out.println(directory2);
+		if (value==0) image = new ImageIcon(); //"void" image = no image
+		else image = new ImageIcon(directory+Integer.toString(value)+".png");
+		
+		isImage = true;
+		updateUI();
 	}
 	
 }
