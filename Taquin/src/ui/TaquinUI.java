@@ -61,6 +61,7 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 				}
 			}
 		}
+		addWindowListener(this);
 	}
 	
 	//add the cells to the main panel
@@ -201,7 +202,15 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 	public void windowClosed(WindowEvent e) {  }
 
 	public void windowClosing(WindowEvent e) {	
-
+		File path = new File("Images/");
+		  if( path.exists() )
+		  {
+		    File[] files = path.listFiles();
+		    for( int i = 0 ; i < files.length ; i++ )
+		    {
+		      files[i].delete();
+		    }
+		  }
 	}
 
 	public void windowDeactivated(WindowEvent e) {	}
