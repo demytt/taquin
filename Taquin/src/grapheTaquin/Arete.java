@@ -1,4 +1,5 @@
-package ai;
+package grapheTaquin;
+
 
 public class Arete {
 	

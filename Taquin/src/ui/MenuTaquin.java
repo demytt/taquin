@@ -1,10 +1,12 @@
 package ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
 
 import javax.swing.BoxLayout;
@@ -17,6 +19,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
 
 @SuppressWarnings("serial")
@@ -69,10 +72,8 @@ public class MenuTaquin extends JMenuBar implements ActionListener{
 		taquinUI = _taquinUI;
 		menu = new JMenu("Options");
 		
-		JMenuItem createNew = new JMenuItem("Nouveau taquin");
-		createNew.addActionListener(this);
-		createNew.setActionCommand("createNew");
-		menu.add(createNew);
+	    BoxLayout layout = new BoxLayout( menu, BoxLayout.Y_AXIS);
+	    menu.setLayout(layout);
 		
 		JMenuItem setSize = new JMenuItem("Choix de la taille du taquin");
 		setSize.addActionListener(this);
@@ -90,6 +91,20 @@ public class MenuTaquin extends JMenuBar implements ActionListener{
 		menu.add(setImage);
 		
 		add(menu);
+		
+		JMenuItem createNew = new JMenuItem("Nouveau taquin");
+		createNew.addActionListener(this);
+		createNew.setActionCommand("createNew");
+		createNew.setAccelerator(KeyStroke.getKeyStroke('N', KeyEvent.CTRL_DOWN_MASK));
+		createNew.setMaximumSize( createNew.getPreferredSize() );
+		add(createNew);
+		
+		JMenuItem solve= new JMenuItem("Résoudre le taquin");
+		solve.addActionListener(this);
+		solve.setActionCommand("solve");
+		solve.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_DOWN_MASK));
+		solve.setMaximumSize( solve.getPreferredSize() );
+		add(solve);
 	}
 
 	//Define what to do when something is clicked in the menu
@@ -99,12 +114,15 @@ public class MenuTaquin extends JMenuBar implements ActionListener{
 		else if (S=="setSize")  setSize(0);
 		else if (S=="setFont") setFont();
 		else if (S=="setImage") setImage();
+		else if (S=="solve") taquinUI.solve();
 	}
 	
 	//Set the size of the taquin, numTimes indicates how many times the user inputs a wrong data format
 	private void setSize(int numTimes) {
 		try {
-			double size = Double.valueOf(JOptionPane.showInputDialog(this, "Choix de la taille:"));
+			String answer = JOptionPane.showInputDialog(this, "Choix de la taille:");
+			if (answer==null) return;
+			double size = Double.valueOf(answer);
 			if ( (size == Math.ceil(size)) && (size >= 1)) taquinUI.setSize((int) size);
 			else throw new Exception();
 		}
@@ -150,10 +168,12 @@ public class MenuTaquin extends JMenuBar implements ActionListener{
 	    choiceFrame.pack();
 	    choiceFrame.setVisible(true);
 	    choiceFrame.setAlwaysOnTop(true);
+	    choiceFrame.setLocationRelativeTo(null);
 	}
 	
 	private void setImage(){
-		taquinUI.setImage(SplitPicture.splitImage(taquinUI.size));
+		String S = SplitPicture.splitImage(taquinUI.size);
+		if(S!=null) taquinUI.setImage(S);
 	}	
 	
 }

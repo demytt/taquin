@@ -1,8 +1,13 @@
 package ui;
 
+import grapheTaquin.Taquin;
+
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -11,9 +16,12 @@ import java.io.File;
 import java.util.LinkedList;
 
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class TaquinUI extends JFrame implements KeyListener, WindowListener{
@@ -25,11 +33,18 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 	
 	int numTrue; //number of cells that are in their good positions (to win)
 	
-	static String defaultFontName = "SERIF";
+	static String defaultFontName = "ACaslonPro-Italic";
 	static Color defaultFontColor = Color.black;
+	static boolean isImage = false;
+	
+	int difficulty;
+	
+	String imagePath;
 	
 	JPanel mainPanel =  new JPanel(); //mainPanel in which everything is displayed
 
+	PathFrame pathFrame;
+	
 	public TaquinUI(int _size) {
 		super("Jeu du taquin"); //name of the window
 		size = _size;
@@ -37,30 +52,59 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 
 		setContentPane(mainPanel);
 		setJMenuBar(new MenuTaquin(this));	//create a MenuTaquin as menu bar	
-		setPreferredSize(new Dimension(400, 400));
+		setPreferredSize(new Dimension(500, 500));
 		pack(); //compute and draw everything
 		setVisible(true);	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //sinon la JFrame ne s'arrête pas quand elle est fermée
+		setLocationRelativeTo(null); //center on the screen
 		addKeyListener(this); 
 	}
 	
 	//create the random cells
 	private void createRandomCases() {
+		difficulty = (int) (5*Math.pow(size, 2.5));
 		cases = new Case[size][size];
-		numTrue = 0;
-		LinkedList<Integer> bij = new LinkedList<Integer>(); 
-		for (int i=0; i<size*size; i++) bij.add(i);
-		java.util.Collections.shuffle(bij); //permute aléatoirement l'ensemble bij = 1:size*size
+	
+		int[][] endValues = new int[size][size];
 		for (int i=0; i<size; i++) {
 			for (int j=0; j<size; j++) {
-				int number = bij.poll();
-				cases[i][j] = new Case(number, defaultFontName, defaultFontColor);
+				endValues[i][j]=i*size+j;
+			}
+		}
+		Taquin configFin = new Taquin(endValues);
+		configFin.shake(difficulty);
+		
+		numTrue = 0;
+		for (int i=0; i<size; i++) {
+			for (int j=0; j<size; j++) {
+				int number = configFin.config[i][j];
+				if ((number!=0)&&(number == i*size + j)) numTrue++;
+				if (isImage) cases[i][j] = new Case(number);
+				else cases[i][j] = new Case(number, defaultFontName, defaultFontColor);
 				if (number == 0) {
 					rowZero=i;
 					colZero=j;
 				}
 			}
 		}
+		
+		//Fully random taquin
+//		LinkedList<Integer> bij = new LinkedList<Integer>(); 
+//		for (int i=0; i<size*size; i++) bij.add(i);
+//		java.util.Collections.shuffle(bij); //permute aléatoirement l'ensemble bij = 1:size*size
+//		for (int i=0; i<size; i++) {
+//			for (int j=0; j<size; j++) {
+//				int number = bij.poll();
+//				if ((number!=0)&&(number == i*size + j)) numTrue++;
+//				if (isImage) cases[i][j] = new Case(number);
+//				else cases[i][j] = new Case(number, defaultFontName, defaultFontColor);
+//				if (number == 0) {
+//					rowZero=i;
+//					colZero=j;
+//				}
+//			}
+//		}
+		
 		addWindowListener(this);
 	}
 	
@@ -73,22 +117,10 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 		}
 	}
 	
-
-//	public void paint(Graphics g) {
-//		super.paint(g);
-//		int height = getHeight();
-//		int width = getWidth();
-//		int hStep = getHeight()/size;
-//		int wStep = getWidth()/size;
-//		for (int i=1; i<(size); i++) {
-//			g.drawLine(i*wStep, 0, i*wStep, height );
-//			g.drawLine(0,i*hStep, width, i*hStep);
-//		}
-//			
-//}
 	
 	//create a whole new taquin
 	public void createNew() {
+		if (pathFrame!=null) pathFrame.dispose();
 		mainPanel.removeAll();
 		mainPanel.setLayout(new GridLayout(size, size));
 		createRandomCases();
@@ -99,125 +131,117 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 	//set the size of the taquin and create a random new one
 	public void setSize(int n) {
 		size = n;
+		if (isImage) SplitPicture.splitImage(size, imagePath);
 		createNew();
 	}
 	
 	public void setFontName(String fontName, Color fontColor) {
+		isImage = false;
 		for (int i=0; i<size; i++) {
 			for (int j=0; j<size; j++) {
+				defaultFontName = fontName;
+				defaultFontColor = fontColor;
 				cases[i][j].updateFont(fontName, fontColor);
 			}
 		}
 	}
 	
-	//swap the values of two cells and after it checks if the taquin is finished
-	private void swapCase(int x1, int y1, int x2, int y2) {
-		int temp = cases[x1][y1].value;
-		int temp2 = cases[x2][y2].value;
-		cases[x1][y1].update(cases[x2][y2].value);
-		cases[x2][y2].update(temp);
-		
-		if (temp == x1*size + y1) numTrue--;
-		else if (temp == x2*size + y2) numTrue++;
-
-		if (temp2 == x2*size + y2) numTrue--;
-		else if (temp2 == x1*size + y1) numTrue++;
+	void setImage(String _imagePath){
+		isImage = true;
+		imagePath = _imagePath;
+		for(int i = 0; i<size; i++){
+			for(int j = 0; j<size; j++){
+				cases[i][j].updateImage();
+			}
+		}
+	}
 	
-		if (numTrue == size*size) {
+	private Taquin toTaquin() {
+		int[][] config = new int[size][size];
+		for (int i=0; i<size; i++) {
+			for (int j=0; j<size; j++) {
+				config[i][j] = cases[i][j].getValue();
+			}
+		}
+		return new Taquin(config);
+	}
+	
+	public void solve() {
+		Taquin t = toTaquin();
+		String chemin = t.solve();
+		if (pathFrame!=null) pathFrame.dispose();
+		pathFrame = new PathFrame(chemin, this);
+	}
+	
+
+	//different conventions than in taquin
+	public void bouge(char c) {
+		int[] move = new int[2];
+		if(c=='D') move[1]=1;
+		else if(c=='G') move[1]=-1;
+		else if(c=='B') move[0]=1;
+		else if(c=='H') move[0]=-1;
+		moveHoleTo(rowZero+move[0], colZero+move[1]);
+	}
+	
+	
+	//swap the values of two cells and after it checks if the taquin is finished
+	private void moveHoleTo(int x, int y) {
+		int val = cases[x][y].getValue();
+		if (x*size + y == val) numTrue--;
+		else if (rowZero*size + colZero == val) numTrue++;
+		cases[rowZero][colZero].update(val);
+		cases[x][y].update(0);
+		rowZero = x;
+		colZero = y;
+		if (numTrue == size*size-1) {
 			JFrame win = new JFrame("Félicitations"); //New windows to say that the user won
 			JLabel label = new JLabel("Bravo, vous avez gagné !");
 			label.setPreferredSize(new Dimension(200,75));
-			label.setLocation(getWidth()/2, getHeight()/2);
-
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			label.setFont(getFont().deriveFont(30f));
+			win.getContentPane().setBackground(Color.white);
 			win.add(label);
-			win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			win.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			win.setPreferredSize(new Dimension(500, 200));
-			win.setLocation(getWidth()/2, getHeight()/2);
 			win.pack();
 			win.setVisible(true);
 			win.setAlwaysOnTop(true);
+			win.setLocationRelativeTo(null);
 		}
 	}
 	
 	public void keyPressed(KeyEvent keyEvent) {
 		int keyNumber = keyEvent.getKeyCode(); 
-		
-		// Move the hole
-//		if ( (keyNumber==KeyEvent.VK_LEFT)&&(colZero>0) ) {
-//			swapCase(rowZero, colZero, rowZero, colZero-1);
-//			colZero--;
-//		}
-//		
-//		else if ( (keyNumber==KeyEvent.VK_RIGHT)&&(colZero<(size-1)) ) {
-//			swapCase(rowZero, colZero, rowZero, colZero+1);
-//			colZero++;
-//		}
-//		
-//		else if ( (keyNumber==KeyEvent.VK_UP)&&(rowZero>0) ) {
-//			swapCase(rowZero, colZero, rowZero-1, colZero);
-//			rowZero--;
-//		}
-//		
-//		else if ( (keyNumber==KeyEvent.VK_DOWN)&&(rowZero<(size-1)) ) {
-//			swapCase(rowZero, colZero, rowZero+1, colZero);
-//			rowZero++;
-//		}		
-		
+		if (pathFrame!=null) pathFrame.dispose();
 		//Move the non-empty case (real life)
-		if ( (keyNumber==KeyEvent.VK_RIGHT)&&(colZero>0) ) {
-			swapCase(rowZero, colZero, rowZero, colZero-1);
-			colZero--;
-		}
-		
-		else if ( (keyNumber==KeyEvent.VK_LEFT)&&(colZero<(size-1)) ) {
-			swapCase(rowZero, colZero, rowZero, colZero+1);
-			colZero++;
-		}
-		
-		else if ( (keyNumber==KeyEvent.VK_DOWN)&&(rowZero>0) ) {
-			swapCase(rowZero, colZero, rowZero-1, colZero);
-			rowZero--;
-		}
-		
-		else if ( (keyNumber==KeyEvent.VK_UP)&&(rowZero<(size-1)) ) {
-			swapCase(rowZero, colZero, rowZero+1, colZero);
-			rowZero++;
-		}
+		if ( (keyNumber==KeyEvent.VK_RIGHT)&&(colZero>0) ) moveHoleTo(rowZero, colZero-1);	
+		else if ( (keyNumber==KeyEvent.VK_LEFT)&&(colZero<(size-1)) ) moveHoleTo(rowZero, colZero+1);
+		else if ( (keyNumber==KeyEvent.VK_DOWN)&&(rowZero>0) ) moveHoleTo(rowZero-1, colZero);
+		else if ( (keyNumber==KeyEvent.VK_UP)&&(rowZero<(size-1)) ) moveHoleTo(rowZero+1, colZero);
 	}
 
 	
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}
 	
-	void setImage(String directory){
-		for(int i = 0; i<size; i++){
-			for(int j = 0; j<size; j++){
-				cases[i][j].updateImage(directory);
+	public void windowClosing(WindowEvent e) {	
+		File path = new File("Images/");
+		if( path.exists()) {
+			File[] files = path.listFiles();
+			for( int i = 0 ; i < files.length ; i++ ){
+				files[i].delete();
 			}
 		}
+		path.delete();
 	}
 
 	public void windowActivated(WindowEvent e) {  }
-
 	public void windowClosed(WindowEvent e) {  }
-
-	public void windowClosing(WindowEvent e) {	
-		File path = new File("Images/");
-		  if( path.exists() )
-		  {
-		    File[] files = path.listFiles();
-		    for( int i = 0 ; i < files.length ; i++ )
-		    {
-		      files[i].delete();
-		    }
-		  }
-	}
-
 	public void windowDeactivated(WindowEvent e) {	}
-
 	public void windowDeiconified(WindowEvent e) {	}
-
 	public void windowIconified(WindowEvent e) {  }
-
 	public void windowOpened(WindowEvent e) {	}
+
+
 }
