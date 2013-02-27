@@ -1,7 +1,6 @@
 package ui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -40,7 +39,7 @@ public class MenuTaquin extends JMenuBar implements ActionListener{
 	JMenu menu; //The hierarchy: is JMenuBar contains JMenu contains JMenuItem
 	TaquinUI taquinUI; //taquinUI in which the MenuTaquin is displayed
 	
-	//Constructeur du menu 
+	//Constructor 
 	public MenuTaquin(TaquinUI _taquinUI) {
 
 	    for (Font f : fonts) currentFontList.addElement(f.getName());

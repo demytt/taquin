@@ -17,9 +17,7 @@ import javax.swing.JPanel;
 public class WelcomeFrame extends JFrame{
 	
 	public WelcomeFrame(){
-		super("Welcome"); //New windows to show the optimal way
-
-	    //getContentPane().setLayout(new FlowLayout());
+		super("Welcome"); 
 		BoxLayout boxLayout = new BoxLayout(getContentPane(), BoxLayout.Y_AXIS);
 		getContentPane().setLayout(boxLayout);
 		
@@ -37,7 +35,6 @@ public class WelcomeFrame extends JFrame{
 		panel.add(label2);
 		panel.add(label3);
 		panel.setBackground(Color.white);
-		//label1.setHorizontalAlignment(SwingConstants.CENTER);
 		add(panel);
 		
 	    JButton playButton = new JButton("Jouer");

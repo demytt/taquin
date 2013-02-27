@@ -3,28 +3,25 @@ package ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
-
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class Case extends JPanel{
 
-	private int value; //valeur de la case (0, 1, ..., size-1) 
+	private int value; // Value of the case (0, 1, ..., size-1) 
 
 	private Boolean isImage;
 	
 	private String fontName;
 	private Color fontColor;
 	
-	//constructeur si un chemin pour les images est donné
+	//constructor if a picture is given
 	public Case(int _value) {
 		value = _value;
 		isImage = true;
 	}
 	
-	//constructeur avec des images par défaut et un choix de police
+	//constructor with default pictures and font choice
 	public Case(int _value, String _fontName, Color _fontColor) {
 		value = _value;		
 		isImage = false;			
@@ -52,7 +49,7 @@ public class Case extends JPanel{
 		updateUI();
 	}
 	
-	//rédéfinition de la méthode paint
+	//redefinition of paint method
 	public void paint(Graphics g) {
 		super.paint(g); //paint the JPanel as an usual JPanel
 		int w = getWidth();
