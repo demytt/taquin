@@ -34,10 +34,8 @@ public class GraphConf {
 		}
 		int limite = configIni.dheur;
 		while (!solution) {
-			System.out.print(limite+" ");
 			limite = DFS(limite, T);
 		}
-		System.out.print(limite);
 	}
 
 	public int DFS(int limite, int[][] T) {

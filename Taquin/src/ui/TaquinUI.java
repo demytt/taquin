@@ -30,6 +30,7 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 	static boolean isImage = false;
 	
 	int difficulty;
+	int coefDifficulty;
 	
 	String imagePath;
 	
@@ -40,8 +41,8 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 	public TaquinUI(int _size) {
 		super("Jeu du taquin"); //name of the window
 		size = _size;
+		coefDifficulty = 4;
 		createNew();
-
 		setContentPane(mainPanel);
 		setJMenuBar(new MenuTaquin(this));	//create a MenuTaquin as menu bar	
 		setPreferredSize(new Dimension(500, 500));
@@ -54,7 +55,7 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 	
 	//create the random cells
 	private void createRandomCases() {
-		difficulty = (int) (5*Math.pow(size, 2.5));
+		difficulty = (int) (coefDifficulty*Math.pow(size, coefDifficulty/2));
 		cases = new Case[size][size];
 	
 		int[][] endValues = new int[size][size];
@@ -127,6 +128,13 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 		createNew();
 	}
 	
+	public void setDifficulty(String S) {
+		if (S=="Facile") coefDifficulty=2;
+		if (S=="Moyen") coefDifficulty=4;
+		if (S=="Difficile") coefDifficulty=6;
+		createNew();
+	}
+	
 	public void setFontName(String fontName, Color fontColor) {
 		isImage = false;
 		for (int i=0; i<size; i++) {
@@ -186,22 +194,10 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 		cases[x][y].update(0);
 		rowZero = x;
 		colZero = y;
-		if (numTrue == size*size-1) {
-			JFrame win = new JFrame("Félicitations"); //New windows to say that the user won
-			JLabel label = new JLabel("Bravo, vous avez gagné !");
-			label.setPreferredSize(new Dimension(200,75));
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			label.setFont(getFont().deriveFont(30f));
-			win.getContentPane().setBackground(Color.white);
-			win.add(label);
-			win.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			win.setPreferredSize(new Dimension(500, 200));
-			win.pack();
-			win.setVisible(true);
-			win.setAlwaysOnTop(true);
-			win.setLocationRelativeTo(null);
-		}
+		if (numTrue == size*size-1) new WinFrame();
+	
 	}
+	
 	
 	public void keyPressed(KeyEvent keyEvent) {
 		int keyNumber = keyEvent.getKeyCode(); 

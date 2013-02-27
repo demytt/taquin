@@ -3,6 +3,8 @@ package ui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,15 +18,20 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class WelcomeFrame extends JFrame{
 	
+	int height = 250;
+	int width = 500;
+	
 	public WelcomeFrame(){
 		super("Welcome"); 
-		BoxLayout boxLayout = new BoxLayout(getContentPane(), BoxLayout.Y_AXIS);
+		setResizable(false);
+		BoxLayout boxLayout = new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS);
 		getContentPane().setLayout(boxLayout);
 		
-	    JPanel panel = new JPanel(new GridLayout(3,0));
+	    JPanel panel = new JPanel(new GridLayout(2,0));
 	    
 		JLabel label1 = new JLabel("ENSAE ParisTech 3eme année");
-		JLabel label2 = new JLabel("Projet de Programmation");
+		JLabel label2 = new JLabel("Jeu de taquin");
+		label2.setFont(label2.getFont().deriveFont(30f).deriveFont(Font.BOLD));
 		JLabel label3 = new JLabel("Arnaud de Myttenaere et Sébastien Deprez");
 		
 		label1.setHorizontalAlignment(JLabel.CENTER);
@@ -33,7 +40,6 @@ public class WelcomeFrame extends JFrame{
 		
 		panel.add(label1);
 		panel.add(label2);
-		panel.add(label3);
 		panel.setBackground(Color.white);
 		add(panel);
 		
@@ -49,16 +55,24 @@ public class WelcomeFrame extends JFrame{
 	    playButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    add(playButton);
 	    
-	    JLabel label4 = new JLabel("   ");
-	    add(label4);
-		
-		setPreferredSize(new Dimension(400,200));
+	    add( new JLabel(" "));
+	    add( new JLabel(" "));
+	    add( new JLabel(" "));
+	    add( new JLabel(" "));
+	    add( new JLabel(" "));
+	    
+	    setPreferredSize(new Dimension(width, height));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setBackground(Color.white);
 		pack();
 		setVisible(true);
 		setAlwaysOnTop(true);
-		setLocation(500, 200);
+		setLocationRelativeTo(null);
 	}
 
+	public void paint(Graphics g) {
+		super.paint(g);
+		g.drawString("Arnaud de Myttenaere et Sébastien Deprez", (int) (0.26*width), 9*height/10);
+	}
+	
 }

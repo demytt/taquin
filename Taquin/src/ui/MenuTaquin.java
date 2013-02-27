@@ -67,7 +67,6 @@ public class MenuTaquin extends JMenuBar implements ActionListener{
 	    ListCellRenderer<Color> renderer = new ColorListRenderer();
 	    colorList.setCellRenderer(renderer);
 	    
-	    
 		taquinUI = _taquinUI;
 		menu = new JMenu("Options");
 		
@@ -89,6 +88,23 @@ public class MenuTaquin extends JMenuBar implements ActionListener{
 		setImage.setActionCommand("setImage");
 		menu.add(setImage);
 		
+		JMenu setDifficulty= new JMenu("Choix de la difficulté");
+		JMenuItem easy = new JMenuItem("Facile");
+		easy.addActionListener(this);
+		easy.setActionCommand("Facile");
+		setDifficulty.add(easy);
+		
+		JMenuItem medium = new JMenuItem("Moyen");
+		medium.addActionListener(this);
+		medium.setActionCommand("Moyen");
+		setDifficulty.add(medium);
+		
+		JMenuItem hard = new JMenuItem("Difficile");
+		hard.addActionListener(this);
+		hard.setActionCommand("Difficile");
+		setDifficulty.add(hard);
+		
+		menu.add(setDifficulty);
 		add(menu);
 		
 		JMenuItem createNew = new JMenuItem("Nouveau taquin");
@@ -114,6 +130,7 @@ public class MenuTaquin extends JMenuBar implements ActionListener{
 		else if (S=="setFont") setFont();
 		else if (S=="setImage") setImage();
 		else if (S=="solve") taquinUI.solve();
+		else taquinUI.setDifficulty(S);
 	}
 	
 	//Set the size of the taquin, numTimes indicates how many times the user inputs a wrong data format

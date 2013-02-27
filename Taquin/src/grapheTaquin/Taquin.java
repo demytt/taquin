@@ -234,6 +234,13 @@ public class Taquin {
 	}
 	
 	public void shake(int difficulty) {
+		for (int i = 0; i<((int)(2*Math.random()))+size/2; i++) {
+			try{
+				bouge('B');
+				bouge('D');
+			}	
+			catch (Exception e){}	
+		}
 		for (int i = 0; i<difficulty; i++) {	
 			char[] choix = {'D','G','H','B'};
 			try {
