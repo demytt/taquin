@@ -3,6 +3,8 @@ package ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -58,6 +60,7 @@ public class Case extends JPanel{
 		if (isImage) g.drawImage(SplitPicture.bufferArray[value], 0, 0, w, h, null);
 		
 		else {
+			if (value != 0) g.drawImage(new ImageIcon("Case.png").getImage(), 0, 0, w, h, null);
 			int sizeFont = (int) (0.5*Math.min(w, h));
 			Color old = g.getColor();
 			g.setColor(fontColor);

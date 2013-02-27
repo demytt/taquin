@@ -11,9 +11,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class TaquinUI extends JFrame implements KeyListener, WindowListener{
@@ -25,7 +23,7 @@ public class TaquinUI extends JFrame implements KeyListener, WindowListener{
 	
 	int numTrue; //number of cells that are in their good positions (to win)
 	
-	static String defaultFontName = "ACaslonPro-Italic";
+	static String defaultFontName = "Corbel";
 	static Color defaultFontColor = Color.black;
 	static boolean isImage = false;
 	

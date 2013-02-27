@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class WelcomeFrame extends JFrame{
+public class WelcomeFrame extends JFrame implements ActionListener{
 	
 	int height = 250;
 	int width = 500;
@@ -29,7 +29,7 @@ public class WelcomeFrame extends JFrame{
 		
 	    JPanel panel = new JPanel(new GridLayout(2,0));
 	    
-		JLabel label1 = new JLabel("ENSAE ParisTech 3eme année");
+		JLabel label1 = new JLabel("ENSAE ParisTech 3ème année");
 		JLabel label2 = new JLabel("Jeu de taquin");
 		label2.setFont(label2.getFont().deriveFont(30f).deriveFont(Font.BOLD));
 		JLabel label3 = new JLabel("Arnaud de Myttenaere et Sébastien Deprez");
@@ -44,13 +44,7 @@ public class WelcomeFrame extends JFrame{
 		add(panel);
 		
 	    JButton playButton = new JButton("Jouer");
-	    playButton.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				new TaquinUI(4);
-				setVisible(false);
-			}
-		});
+	    playButton.addActionListener(this);
 
 	    playButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    add(playButton);
@@ -73,6 +67,11 @@ public class WelcomeFrame extends JFrame{
 	public void paint(Graphics g) {
 		super.paint(g);
 		g.drawString("Arnaud de Myttenaere et Sébastien Deprez", (int) (0.26*width), 9*height/10);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		new TaquinUI(4);
+		dispose();
 	}
 	
 }

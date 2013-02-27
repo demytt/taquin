@@ -65,8 +65,10 @@ public class PathFrame extends JFrame implements ActionListener{
 @SuppressWarnings("serial")
 class IconArrow extends JLabel {
 	String chemin;
+	
 	IconArrow(String _chemin) {
 		chemin = _chemin ;
+		if (chemin == null) chemin = "";
 		String empty = "     ";
 		for(int i = 0; i<chemin.length();i++){
 			empty += "         ";
