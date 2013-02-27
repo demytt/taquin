@@ -8,8 +8,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
 public class SplitPicture {
-	
-	static String fileBase = "Images/";
 	static BufferedImage[] bufferArray;
 	
 	public static String splitImage(int size) {
